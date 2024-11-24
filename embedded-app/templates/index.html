@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script>
+    function stop(){
+        fetch("/stop").then(response => console.log(response));
+    }
+    function runSideToSide(){
+        fetch("/led/0").then(response => console.log(response));
+    }
+
+    function runWave(){
+        fetch("/led/1").then(response => console.log(response));
+    }
+
+    function runBlinking(){
+        fetch("/led/2").then(response => console.log(response));
+    }
+
+    function runFullBright(){
+        fetch("/led/3").then(response => console.log(response));
+    }
+
+    let colorPicker;
+    const defaultColor = "#0000ff";
+
+    window.addEventListener("load", startup, false);
+
+    function startup() {
+        colorPicker = document.querySelector("#color-picker");
+        colorPicker.value = defaultColor;
+        colorPicker.addEventListener("input", updateFirst, false);
+        colorPicker.select();
+    }
+
+    function updateFirst(event) {
+        console.log("updateafirst" + event.target.value);
+        fetch("/rgb", {
+            method: "POST",
+            body: JSON.stringify({
+                red: event.target.value.substring(1, 3),
+                green: event.target.value.substring(3, 5),
+                blue: event.target.value.substring(5, 7)
+            }),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(result => console.log(result));
+    }
+
+</script>
+<body>
+
+<button onclick="stop()">STOP</button>
+<button onclick="runSideToSide()">Side To Side</button>
+<button onclick="runWave()">Wave</button>
+<button onclick="runBlinking()">Blinking</button>
+<button onclick="runFullBright()">Full bright</button>
+
+<input id="color-picker" type="color">
+
+</body>
+
+
+</html>
